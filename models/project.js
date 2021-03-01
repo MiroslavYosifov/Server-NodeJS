@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
+const Model = mongoose.model;
 
 const projectSchema = new Schema({
     name:  { type: String, required: true },
@@ -10,4 +12,4 @@ const projectSchema = new Schema({
     features: [{ type: Schema.Types.ObjectId, ref: 'Feature' }],
 });
 
-export default mongoose.model('Project', projectSchema);
+export default new Model('Project', projectSchema);

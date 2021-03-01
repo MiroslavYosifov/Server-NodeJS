@@ -6,8 +6,6 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../helpers/authorizatio
 
 const router = express.Router();
 
-router.post('/registration', isAuth, controllers.auth.post.registration);
-router.post('/login', controllers.auth.post.login);
-router.post('/logout', isAuth, isAdmin, isDeveloper, isModerator, isQA, controllers.auth.post.logout);
+router.post('/add', isAuth, controllers.project.post.addOneProject);
 
 export default router;

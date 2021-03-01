@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
+const Model = mongoose.model;
 
 const featureSchema = new Schema({
     name:  { type: String, required: true },
@@ -11,4 +13,4 @@ const featureSchema = new Schema({
     issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
   });
 
-export default mongoose.model('Feature', featureSchema);
+export default new Model('Feature', featureSchema);

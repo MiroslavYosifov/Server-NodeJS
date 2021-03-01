@@ -1,14 +1,16 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
+const Model = mongoose.model;
 
 const issueSchema = new Schema({
     name:  { type: String, required: true },
     description: { type: String, required: true },
     status: { type: String, required: true },
-    date: { type: String, required: true }, // IN PROCCESS // COMPLETE
-    creator: {}, // TO DO REF TO USER MODEL
-    feature: {}, // TO DO REF TO Feature MODEL
-    project: {}, // TO DO REF TO Project MODEL
+    date: { type: String, required: true },
+    creator: { type: Schema.Types.ObjectId, ref: 'User' },
+    project: { type: Schema.Types.ObjectId, ref: 'Project' },
+    feature: { type: Schema.Types.ObjectId, ref: 'Feature' },
   });
 
-export default mongoose.model('Issue', issueSchema);
+export default new Model('Issue', issueSchema);

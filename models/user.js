@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
+import bcrypt from "bcryptjs";
+const saltRounds = 10;
+
 const { Schema } = mongoose;
+const Model = mongoose.model;
 
 const userSchema = new Schema({
     name:  { type: String, required: true },
@@ -7,9 +11,18 @@ const userSchema = new Schema({
     roles: [],
     ownProjects: [], // TO DO REF TO PROJECT MODEL
     participantsInProjects: [] // TO DO REF TO PROJECT MODEL
-  });
+});
 
-export default mongoose.model('User', userSchema);
+
+userSchema.methods = {
+    matchPassword: function (password) {
+        return bcrypt.compare(password, this.password);
+    }
+};
+
+
+export default new Model('User', userSchema);
+
 
 
 // const userSchema = new Schema({

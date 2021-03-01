@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+
 const { Schema } = mongoose;
+const Model = mongoose.model;
 
 const suggestionSchema = new Schema({
     name:  { type: String, required: true },
@@ -11,4 +13,4 @@ const suggestionSchema = new Schema({
     feature: { type: Schema.Types.ObjectId, ref: 'Feature' },
   });
 
-export default mongoose.model('Suggestion', suggestionSchema);
+export default new Model('Suggestion', suggestionSchema);
