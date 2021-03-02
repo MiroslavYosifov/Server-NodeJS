@@ -9,8 +9,11 @@ const userSchema = new Schema({
     name:  { type: String, required: true },
     password: { type: String, required: true },
     roles: [],
-    ownProjects: [], // TO DO REF TO PROJECT MODEL
-    participantsInProjects: [] // TO DO REF TO PROJECT MODEL
+    ownProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }], // TO DO REF TO PROJECT MODEL
+    participantsInProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }], // TO DO REF TO PROJECT MODEL
+    features: [{ type: Schema.Types.ObjectId, ref: 'Feature' }],
+    suggestions: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
+    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
 });
 
 

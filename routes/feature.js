@@ -6,7 +6,7 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../helpers/authorizatio
 
 const router = express.Router();
 
-// PROJECT PATHS
-router.post('/add', isAuth, controllers.project.post.addProject);
+// FEATURE PATHS
+router.post('/add', isAuth, controllers.feature.post.addFeature); // TO DO PROJECT ID IN URL /:id/feature/add
 
 export default router;

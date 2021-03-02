@@ -6,7 +6,6 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../helpers/authorizatio
 
 const router = express.Router();
 
-// PROJECT PATHS
-router.post('/add', isAuth, controllers.project.post.addProject);
+router.post('/add', isAuth, controllers.issue.post.addIssue);
 
 export default router;

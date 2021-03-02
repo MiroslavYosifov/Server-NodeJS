@@ -9,7 +9,7 @@ const featureSchema = new Schema({
     status: { type: String, required: true }, // IN SUGGESTED // IN DEVELOPMENT // IN TESTING // COMPLETED
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },
-    suggestion: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
+    suggestions: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
     issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
   });
 

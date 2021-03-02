@@ -1,18 +1,29 @@
-import { Project } from '../models/index.js';
+import { Project, User, Feature, Issue, Suggestion } from '../models/index.js';
 
 export default {
     get: {
+        getOneProject: async (req, res, next) => {
 
+        },
+        getAllProjects: async (req, res, next) => {
+
+        }
     },
     post: {
-        addOneProject: async (req, res, next) => {
+        addProject: async (req, res, next) => {
             const { name, description } = req.body;
-            const creator = req.authUser._id;
-
+            const creatorId = req.authUser._id;
+            // TO DO VALDIATION OF DATA
             try {
-                const project = await Project.create({ name, description, date: Date.now(), creator });
-                project.members.push(creator);
+                const project = await Project.create({ name, description, date: Date.now(), creator: creatorId });
+                const user = await User.findById(creatorId);
+            
+                project.members.push(creatorId);
                 project.save();
+
+                user.ownProjects.push(project._id);
+                user.save();
+                
                 res
                 .status(201)
                 .send(project);
@@ -23,20 +34,26 @@ export default {
         }
     },
     put: {
-        putFeature: async (req, res, next) => {
+        updateProject: async (req, res, next) => {
 
-        },
-        putIssue: async (req, res, next) => {
-
-        },
-        putSuggestion: async (req, res, next) => {
-
-        },
+        }
     },
     delete: {
+        removeProject: async (req, res, next) => {
 
+        }
     }
 }
+
+
+// ISSUE
+// name:  { type: String, required: true },
+// description: { type: String, required: true },
+// status: { type: String, required: true },
+// date: { type: String, required: true },
+// creator: { type: Schema.Types.ObjectId, ref: 'User' },
+// project: { type: Schema.Types.ObjectId, ref: 'Project' },
+// feature: { type: Schema.Types.ObjectId, ref: 'Feature' },
 
 //  FEATURE
 //  name:  { type: String, required: true },
