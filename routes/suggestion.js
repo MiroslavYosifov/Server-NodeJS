@@ -6,6 +6,8 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../helpers/authorizatio
 
 const router = express.Router();
 
+router.get('/get', isAuth, controllers.suggestion.get.getSuggestion);
 router.post('/add', isAuth, controllers.suggestion.post.addSuggestion);
+router.delete('/delete', isAuth, controllers.suggestion.delete.removeSuggestion);
 
 export default router;

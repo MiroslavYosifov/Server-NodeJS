@@ -24,7 +24,7 @@ export const isAuth = async function (req, res, next) {
         next();
 
     } catch (error) {
-        throw new Error(error);
+        console.log(error);
     }
     
    

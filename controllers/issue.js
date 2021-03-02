@@ -3,7 +3,17 @@ import { Project, User, Feature, Issue, Suggestion } from '../models/index.js';
 export default {
     get: {
         getIssue: async (req, res, next) => {
-
+            // const { issueId } = req.body;
+            try {
+                const issue = await Issue
+                                        .findById("603d88737fb8712f7054641d")
+                                        .populate('creator')
+                                        .populate('feature')
+                                        .populate('project')
+                res.send(issue);
+            } catch (error) {
+                console.log(error);
+            }
         }
     },
     post: {
@@ -43,7 +53,20 @@ export default {
     },
     delete: {
         removeIssue: async (req, res, next) => {
+            //const { issueId } = req.body;
+            try {
+                const issue = await Issue.findById("603e4f93f5aa7c0dc0e2a7bb");
 
+                const updatedFeature = await Feature.updateOne({ _id: issue.feature }, { $pull: { issues: { $in: ["603e4f93f5aa7c0dc0e2a7bb"] } }});
+                const updatedUser = await User.updateOne({ _id: issue.creator }, { $pull: { issues: { $in: ["603e4f93f5aa7c0dc0e2a7bb"] } }});
+
+                const deletedIssue = await Issue.deleteOne({_id: "603e4f93f5aa7c0dc0e2a7bb"});
+                
+                res.send("Issue was deleted!")
+            } 
+            catch (error) {
+                console.log(error);
+            }
         },
     }
 }
