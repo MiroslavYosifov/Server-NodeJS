@@ -10,7 +10,9 @@ export default {
                                         .populate('creator')
                                         .populate('feature')
                                         .populate('project')
-                res.send(issue);
+                res
+                .status(200)
+                .send(issue);
             } catch (error) {
                 console.log(error);
             }
@@ -61,8 +63,10 @@ export default {
                 const updatedUser = await User.updateOne({ _id: issue.creator }, { $pull: { issues: { $in: ["603e4f93f5aa7c0dc0e2a7bb"] } }});
 
                 const deletedIssue = await Issue.deleteOne({_id: "603e4f93f5aa7c0dc0e2a7bb"});
-                
-                res.send("Issue was deleted!")
+
+                res
+                .status(200)
+                .send("Issue was deleted!")
             } 
             catch (error) {
                 console.log(error);

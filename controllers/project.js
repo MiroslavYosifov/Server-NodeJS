@@ -23,6 +23,7 @@ export default {
                                         .populate('creator');
                                     
                 res
+                .status(200)
                 .send(project);
 
             } catch (error) {
@@ -69,7 +70,7 @@ export default {
             // 1. TO DO VALIDATION OF DATA
             // 2. TO DO PROTECTION ONLY ADMINS AND CREATOR CAN DELETE PROEJECT
             // 3. TO DO ERROR HANDLING
-            
+
             //const { projectId } = req.body;
 
             try {
@@ -107,7 +108,9 @@ export default {
                                                                     issues: { $in: issues }
                                                             }});
 
-                res.send("Project was deleted");
+                res
+                .status(200)
+                .send("Project was deleted");
             } 
             catch (error) {
                 console.log(error);

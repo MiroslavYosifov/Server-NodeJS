@@ -7,7 +7,9 @@ export default {
             try {
                 const feature = await Feature.findById("603d7e1c6ee45924e479eee5");
                 console.log(feature);
-                res.send(feature);
+                res
+                .status(200)
+                .send(feature);
             } catch (error) {
                 console.log(error);
             }
@@ -57,8 +59,6 @@ export default {
                                             .populate({ path: 'issues' })
                                             .populate({ path: 'suggestions'});
                 
-                console.log(feature);
-
                 const issuesId = feature.issues.map(x => { return x._id });
                 const suggestionsId = feature.suggestions.map(x => { return x._id });
 
@@ -73,7 +73,9 @@ export default {
                                                                     issues: { $in: issuesId }
                                                             }});
                                                 
-                res.send('Feature was deleted');
+                res
+                .status(200)
+                .send('Feature was deleted');
             } 
             catch (error) {
                 console.log(error);

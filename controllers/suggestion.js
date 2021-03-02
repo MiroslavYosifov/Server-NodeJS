@@ -11,7 +11,9 @@ export default {
                                                 .populate('project')
 
 
-                res.send(suggestion);
+                res
+                .status(200)
+                .send(suggestion);
             } catch (error) {
                 console.log(error);
             }
@@ -63,7 +65,9 @@ export default {
             
                 const deletedIssue = await Suggestion.deleteOne({_id: "603e4f9ef5aa7c0dc0e2a7be"});
                 
-                res.send("Suggestion was deleted!")
+                res
+                .status(200)
+                .send("Suggestion was deleted!")
             } 
             catch (error) {
                 console.log(error);

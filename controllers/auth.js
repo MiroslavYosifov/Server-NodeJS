@@ -21,7 +21,7 @@ export default {
 
                 res
                 .cookie(configs.auth.authToken.name, autToken)
-                .status(200)
+                .status(201)
                 .send({ "tokens": { autToken: autToken } });
 
             } 
@@ -62,7 +62,10 @@ export default {
             
             try {
                 await TokenBlackList.create({ token: authToken });
-                res.clearCookie(configs.auth.authToken.name).send('Logout successfully!');
+                res
+                .status(200)
+                .clearCookie(configs.auth.authToken.name)
+                .send('Logout successfully!');
             } catch (error) {
                 throw new Error(error);
             }

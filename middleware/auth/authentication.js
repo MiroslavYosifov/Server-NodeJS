@@ -1,6 +1,6 @@
-import { User, TokenBlackList } from '../models/index.js';
-import { verifyAuthToken } from './jwt.js';
-import configs from '../settings/configs.js';
+import { User, TokenBlackList } from '../../models/index.js';
+import { verifyAuthToken } from '../../helpers/jwt.js';
+import configs from '../../settings/configs.js';
 
 export const isAuth = async function (req, res, next) {
     const authToken = req.cookies[configs.auth.authToken.name];
@@ -26,7 +26,4 @@ export const isAuth = async function (req, res, next) {
     } catch (error) {
         console.log(error);
     }
-    
-   
-   
 }
