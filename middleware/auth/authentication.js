@@ -6,11 +6,15 @@ export const isAuth = async function (req, res, next) {
     const authToken = req.cookies[configs.auth.authToken.name];
 
     try {
+        if(!authToken) {
+            throw  new Error('Not authenticated!');
+        }
+
         const verifiedUser = await verifyAuthToken(authToken);
         const blackListToken = await TokenBlackList.find({ token: authToken });
 
         if(!verifiedUser) {
-            res.status(401).send('Unauthorized!!!');
+            res.status(401).send('Not authenticated!');
             return;
         }
 

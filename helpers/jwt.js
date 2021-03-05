@@ -16,8 +16,6 @@ export const verifyAuthToken = async function (authToken) {
         catch (error) {
             reject(error)
         }
-       
-
     });
 }
 
