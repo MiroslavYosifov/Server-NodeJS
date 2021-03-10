@@ -6,6 +6,7 @@ const Model = mongoose.model;
 const featureSchema = new Schema({
     name:  { type: String, required: true },
     date: { type: String, required: true },
+    description: { type: String, required: true },
     status: { type: String, required: true }, // IN SUGGESTED // IN DEVELOPMENT // IN TESTING // COMPLETED
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },

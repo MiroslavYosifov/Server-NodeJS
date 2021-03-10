@@ -1,12 +1,13 @@
 import { Project, User, Feature, Issue, Suggestion } from '../models/index.js';
+import { getFeatureWithRelations } from './controllerUtils.js';
 
 export default {
     get: {
         getFeature: async (req, res, next) => {
-            // const { featureId } = req.body;
+            const featureId = req.params.featureId;
             try {
-                const feature = await Feature.findById("603d7e1c6ee45924e479eee5");
-                console.log(feature);
+                const feature = await getFeatureWithRelations(featureId);
+               
                 res
                 .status(200)
                 .send(feature);
@@ -18,21 +19,21 @@ export default {
     post: {
         addFeature: async (req, res, next) => {
             const { name, description, status, projectId } = req.body;
-            console.log(projectId);
             const creatorId = req.authUser._id;
             // const projectId = ''; // TO DO SHOULD GET PROJECT ID FROM URL PARAMS
             // TO DO VALDIATION OF DATA
             try {
-                const feature = await Feature.create({ name, description, status, date: Date.now(), creator: creatorId, project: projectId });
+                const createdFeature = await Feature.create({ name, description, status, date: Date.now(), creator: creatorId, project: projectId });
                 const user = await User.findById(creatorId);
                 const project = await Project.findById(projectId);
-                console.log(user);
-                console.log(project);
-                project.features.push(feature._id);
+                
+                project.features.push(createdFeature._id);
                 project.save();
 
-                user.features.push(feature._id);
+                user.features.push(createdFeature._id);
                 user.save();
+                
+                const feature = await getFeatureWithRelations(createdFeature._id);
 
                 res
                 .status(201)
@@ -84,11 +85,42 @@ export default {
     }
 }
 
-//  FEATURE
-//  name:  { type: String, required: true },
-//  date: { type: String, required: true },
-//  status: { type: String, required: true }, // IN SUGGESTED // IN DEVELOPMENT // IN TESTING // COMPLETED
-//  creator: { type: Schema.Types.ObjectId, ref: 'User' },
-//  project: { type: Schema.Types.ObjectId, ref: 'Project' },
-//  suggestion: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
-//  issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
+async function getFeatureWitH (featureId) {
+    return await Feature.findById(featureId)
+                                        .populate({ 
+                                            path: 'suggestions', 
+                                            populate: [
+                                                { 
+                                                    path: 'project',
+                                                    model: 'Project',
+                                                },
+                                                {
+                                                    path: 'feature',
+                                                    model: 'Feature',
+                                                },
+                                                {
+                                                    path: 'creator',
+                                                    model: 'User',
+                                                },
+                                            ]
+                                        })
+                                        .populate({ 
+                                            path: 'issues', 
+                                            populate: [
+                                                { 
+                                                    path: 'project',
+                                                    model: 'Project',
+                                                },
+                                                {
+                                                    path: 'feature',
+                                                    model: 'Feature',
+                                                },
+                                                {
+                                                    path: 'creator',
+                                                    model: 'User',
+                                                },
+                                            ]
+                                        })
+                                        .populate('project')
+                                        .populate('creator');
+};

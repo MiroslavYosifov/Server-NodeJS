@@ -8,7 +8,7 @@ export default {
                                                 .findById("603d887e7fb8712f7054641e")
                                                 .populate('creator')
                                                 .populate('feature')
-                                                .populate('project')
+                                                .populate('project');
 
 
                 res
@@ -30,13 +30,19 @@ export default {
 
                 const projectId = feature.project;
 
-                const suggestion = await Suggestion.create({ name, description, status, date: Date.now(), creator: creatorId, feature: featureId, project: projectId  });
+                const createdSuggestion = await Suggestion.create({ name, description, status, date: Date.now(), creator: creatorId, feature: featureId, project: projectId  });
                
-                user.suggestions.push(suggestion._id);
+                user.suggestions.push(createdSuggestion._id);
                 user.save();
 
-                feature.suggestions.push(suggestion._id);
+                feature.suggestions.push(createdSuggestion._id);
                 feature.save();
+
+                const suggestion = await Suggestion
+                    .findById(createdSuggestion._id)
+                    .populate('creator')
+                    .populate('feature')
+                    .populate('project')
 
                 res
                 .status(201)

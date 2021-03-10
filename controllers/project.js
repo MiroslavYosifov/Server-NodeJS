@@ -3,11 +3,34 @@ import { Project, User, Feature, Issue, Suggestion } from '../models/index.js';
 export default {
     get: {
         getProject: async (req, res, next) => {
-            // const { projectId } = req.body;
+            const projectId = req.params.projectId;
             try {
 
                 const project = await Project
-                                        .findById("603daf2a5978f827fc05794b")
+                                        .findById(projectId)
+                                        .populate({ 
+                                            path: 'features', 
+                                            populate: { 
+                                                path: 'creator',
+                                                model: 'User'
+                                            },
+                                        })
+                                        .populate('creator')
+                                        .populate('project');
+                                    
+                res
+                .status(200)
+                .send(project);
+
+            } catch (error) {
+                console.log(error);
+            }
+           
+        },
+        listProjects: async (req, res, next) => {
+            try {
+                const projects = await Project
+                                        .find()
                                         .populate({ 
                                             path: 'features', 
                                             populate: { 
@@ -24,32 +47,46 @@ export default {
                                     
                 res
                 .status(200)
-                .send(project);
+                .send(projects);
 
             } catch (error) {
                 console.log(error);
             }
-           
-        },
-        getAllProjects: async (req, res, next) => {
-
         }
     },
     post: {
         addProject: async (req, res, next) => {
             const { name, description } = req.body;
             const creatorId = req.authUser._id;
+            console.log(name, description);
             // TO DO VALDIATION OF DATA
             try {
-                const project = await Project.create({ name, description, date: Date.now(), creator: creatorId });
+                const createdProject = await Project.create({ name, description, date: Date.now(), creator: creatorId })
+                                
                 const user = await User.findById(creatorId);
             
-                project.members.push(creatorId);
-                project.save();
+                createdProject.members.push(creatorId);
+                createdProject.save();
 
-                user.ownProjects.push(project._id);
+                user.ownProjects.push(createdProject._id);
                 user.save();
                 
+                const project = await Project
+                                        .findById(createdProject._id)
+                                        .populate({ 
+                                            path: 'features', 
+                                            populate: { 
+                                                path: 'issues',
+                                                model: 'Issue',
+                                                populate: {
+                                                    path: 'creator',
+                                                    select: 'name',
+                                                    model: 'User',
+                                                }
+                                            }
+                                        })
+                                        .populate('creator');    
+
                 res
                 .status(201)
                 .send(project);
@@ -92,7 +129,6 @@ export default {
                     issues = [...issues, ...issuesID];
                     suggestions = [...suggestions, ...suggestionsID];
                     features.push(feature._id);
-                   
                 }
          
                 const deletedProject = await Project.deleteOne({ _id: "603e4a180d0d8405f0c8cf57"});

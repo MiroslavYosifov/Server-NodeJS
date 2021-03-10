@@ -8,8 +8,6 @@ const schemaValidations = (function () {
         body("description")
         .exists().withMessage("Project description is required")
         .isLength({ min: 4 }).withMessage("Project description should be greater than 3 character"),
-        body("status")
-        .exists().withMessage("Status is required")
     ];
 })();
 

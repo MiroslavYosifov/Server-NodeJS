@@ -17,7 +17,7 @@ const configs = {
             refreshToken: {
                 name: 'refresh-token',
                 secret: "htrhrtherh5",
-                expire: 180000
+                expire: "24h"
             }
             
         }

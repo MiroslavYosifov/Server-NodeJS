@@ -19,6 +19,20 @@ export const verifyAuthToken = async function (authToken) {
     });
 }
 
+export const getTokenExpirationTime = async function (authToken) {
+    return new Promise((resolve, reject) => {
+        try {
+            const data = jwt.verify(authToken, configs.auth.authToken.secret)
+            const expirationIn = Number(data.exp) - Number(data.iat);
+            resolve(expirationIn);
+        } 
+        catch (error) {
+            reject(error)
+        }
+    });
+}
+
+
 
 // export const createRefreshToken = function (user) {
 //     const payload = { id: user._id, user_roles: ["admin", "moderator", "developer", "qa"]};

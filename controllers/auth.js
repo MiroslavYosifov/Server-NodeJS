@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { User, TokenBlackList } from '../models/index.js';
 
 import configs from '../settings/configs.js';
-import { createAuthToken } from '../helpers/jwt.js';
+import { createAuthToken, verifyAuthToken, getTokenExpirationTime } from '../helpers/jwt.js';
 
 export default {
     get: {
@@ -17,12 +17,13 @@ export default {
                 const hashPassword = await bcrypt.hash(password, salt);
 
                 const user = await User.create({ name: name, password: hashPassword });
-                const autToken = createAuthToken(user);
+
+                const authToken = createAuthToken(user);
+                const expiresIn = await getTokenExpirationTime(authToken);
 
                 res
-                .cookie(configs.auth.authToken.name, autToken)
-                .status(201)
-                .send({ "tokens": { autToken: autToken } });
+                .status(200)
+                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name });
 
             } 
             catch (error) {
@@ -40,13 +41,13 @@ export default {
                 const validPass = await bcrypt.compare(password, user.password)
                 if (!validPass) return res.status(401).send("email or password is wrong");
     
-                const autToken = createAuthToken(user);
+                const authToken = createAuthToken(user);
+                const expiresIn = await getTokenExpirationTime(authToken);
                 //const refreshToken = createRefreshToken(user);
 
                 res
-                .cookie(configs.auth.authToken.name, autToken)
                 .status(200)
-                .send({ "tokens": { autToken: autToken } });
+                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name });
     
                 //res.cookie(configs.auth.authToken, token).status(200).header(configs.auth.authToken, token).send({ "token": token });
                 //let token = req.headers.authorization;
@@ -64,7 +65,6 @@ export default {
                 await TokenBlackList.create({ token: authToken });
                 res
                 .status(200)
-                .clearCookie(configs.auth.authToken.name)
                 .send('Logout successfully!');
             } catch (error) {
                 throw new Error(error);

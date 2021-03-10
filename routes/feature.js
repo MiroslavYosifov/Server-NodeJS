@@ -8,8 +8,8 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../middleware/auth/auth
 const router = express.Router();
 
 // FEATURE PATHSgetFeature
-router.get('/get', isAuth, controllers.feature.get.getFeature); // TO DO PROJECT ID IN URL /:id/feature/add
-router.post('/add', isAuth, addFeature.schemaValidations, addFeature.handlingErrors, controllers.feature.post.addFeature); // TO DO PROJECT ID IN URL /:id/feature/add\
+router.get('/get/:featureId', controllers.feature.get.getFeature); // TO DO PROJECT ID IN URL /:id/feature/add
+router.post('/add', addFeature.schemaValidations, addFeature.handlingErrors, isAuth, controllers.feature.post.addFeature); // TO DO PROJECT ID IN URL /:id/feature/add\
 router.delete('/delete', isAuth, controllers.feature.delete.removeFeature); // TO DO PROJECT ID IN URL /:id/feature/add
 
 export default router;

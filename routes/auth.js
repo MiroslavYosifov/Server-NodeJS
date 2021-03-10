@@ -9,7 +9,7 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../middleware/auth/auth
 
 const router = express.Router();
 
-router.post('/registration', registration.schemaValidations, registration.handlingErrors, isAuth, controllers.auth.post.registration);
+router.post('/registration', registration.schemaValidations, registration.handlingErrors, controllers.auth.post.registration);
 router.post('/login', login.schemaValidations, login.handlingErrors, controllers.auth.post.login);
 router.post('/logout', isAuth, isAdmin, isDeveloper, isModerator, isQA, controllers.auth.post.logout);
 

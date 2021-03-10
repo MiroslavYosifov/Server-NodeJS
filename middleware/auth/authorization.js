@@ -1,5 +1,5 @@
 //const payload = { id: user._id, user_roles: ["admin", "moderator"]};
-
+// TO DO AUTHORIZATION
 export const isAdmin = async function (req, res, next) {
     console.log("IS ADMIN", req.authUser);
     next();

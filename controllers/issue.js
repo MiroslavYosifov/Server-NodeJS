@@ -3,13 +3,13 @@ import { Project, User, Feature, Issue, Suggestion } from '../models/index.js';
 export default {
     get: {
         getIssue: async (req, res, next) => {
-            // const { issueId } = req.body;
+            const { issueId } = req.body;
             try {
                 const issue = await Issue
-                                        .findById("603d88737fb8712f7054641d")
+                                        .findById(issueId)
                                         .populate('creator')
                                         .populate('feature')
-                                        .populate('project')
+                                        .populate('project');
                 res
                 .status(200)
                 .send(issue);
@@ -22,26 +22,30 @@ export default {
         addIssue: async (req, res, next) => {
             const { name, description, status, featureId } = req.body;
             const creatorId = req.authUser._id;
-            // TO DO VALDIATION OF DATA
+
             try {
                 const user = await User.findById(creatorId);
                 const feature = await Feature.findById(featureId);
 
                 const projectId = feature.project;
 
-                const issue = await Issue.create({ name, description, status, date: Date.now(), creator: creatorId, feature: featureId, project: projectId });
+                const createdIssue = await Issue.create({ name, description, status, date: Date.now(), creator: creatorId, feature: featureId, project: projectId });
                 
-                user.issues.push(issue._id);
+                user.issues.push(createdIssue._id);
                 user.save();
 
-                feature.issues.push(issue._id);
+                feature.issues.push(createdIssue._id);
                 feature.save();
+
+                const issue = await Issue
+                                        .findById(createdIssue._id)
+                                        .populate('creator')
+                                        .populate('feature')
+                                        .populate('project');
 
                 res
                 .status(201)
                 .send(issue);
-
-    
             } 
             catch (error) {
                 console.log(error);

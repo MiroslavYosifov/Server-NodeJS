@@ -8,7 +8,8 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../middleware/auth/auth
 const router = express.Router();
 
 // PROJECT PATHS
-router.get('/get', isAuth, controllers.project.get.getProject);
+router.get('/get/:projectId', controllers.project.get.getProject);
+router.get('/list', controllers.project.get.listProjects);
 router.post('/add', addProject.schemaValidations, addProject.handlingErrors, isAuth, controllers.project.post.addProject);
 router.delete('/delete', isAuth, controllers.project.delete.removeProject);
 
