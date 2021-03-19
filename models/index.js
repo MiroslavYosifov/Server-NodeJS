@@ -4,6 +4,7 @@ import Project from './project.js';
 import Feature from './feature.js';
 import Issue from './issue.js';
 import Suggestion from './suggestion.js';
+import Note from './note.js'
 
 export {
     User,
@@ -11,5 +12,6 @@ export {
     Project,
     Feature,
     Issue,
-    Suggestion
+    Suggestion,
+    Note
 }

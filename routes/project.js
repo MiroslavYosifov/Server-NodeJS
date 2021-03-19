@@ -11,6 +11,6 @@ const router = express.Router();
 router.get('/get/:projectId', controllers.project.get.getProject);
 router.get('/list', controllers.project.get.listProjects);
 router.post('/add', addProject.schemaValidations, addProject.handlingErrors, isAuth, controllers.project.post.addProject);
-router.delete('/delete', isAuth, controllers.project.delete.removeProject);
+router.delete('/delete/:projectId', isAuth, controllers.project.delete.removeProject);
 
 export default router;

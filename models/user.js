@@ -14,15 +14,14 @@ const userSchema = new Schema({
     features: [{ type: Schema.Types.ObjectId, ref: 'Feature' }],
     suggestions: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
     issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
+    notes: [{ type: Schema.Types.ObjectId, ref: 'Note' }],
 });
-
 
 userSchema.methods = {
     matchPassword: function (password) {
         return bcrypt.compare(password, this.password);
     }
 };
-
 
 export default new Model('User', userSchema);
 

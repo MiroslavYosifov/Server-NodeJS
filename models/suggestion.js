@@ -6,7 +6,7 @@ const Model = mongoose.model;
 const suggestionSchema = new Schema({
     name:  { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: String, required: true, default: "accepted" }, // ACCEPTED // DECLINED
+    status: { type: String, required: true }, // ACCEPTED // DECLINED
     date: { type: String, required: true }, // IN PROCCESS // COMPLETE
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },

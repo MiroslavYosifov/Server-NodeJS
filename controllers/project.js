@@ -24,6 +24,11 @@ export default {
 
             } catch (error) {
                 console.log(error);
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with GET Project` 
+                });
             }
            
         },
@@ -51,6 +56,11 @@ export default {
 
             } catch (error) {
                 console.log(error);
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with List Project` 
+                });
             }
         }
     },
@@ -89,10 +99,18 @@ export default {
 
                 res
                 .status(201)
-                .send(project);
+                .send({
+                    successMessage: `${name} project was added successfully!`,
+                    project: project
+                });
             } 
             catch (error) {
                 console.log(error);
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with add Project` 
+                });
             }
         }
     },
@@ -108,12 +126,12 @@ export default {
             // 2. TO DO PROTECTION ONLY ADMINS AND CREATOR CAN DELETE PROEJECT
             // 3. TO DO ERROR HANDLING
 
-            //const { projectId } = req.body;
+            const projectId = req.params.projectId;
 
             try {
 
                 const project = await Project
-                                        .findById("603e4a180d0d8405f0c8cf57")
+                                        .findById(projectId)
                                         .populate({ path: 'features', populate: { path: 'issues', model: 'Issue' }})
                                         .populate({ path: 'features', populate: { path: 'suggestions', model: 'Suggestion' }});
 
@@ -131,14 +149,14 @@ export default {
                     features.push(feature._id);
                 }
          
-                const deletedProject = await Project.deleteOne({ _id: "603e4a180d0d8405f0c8cf57"});
+                const deletedProject = await Project.deleteOne({ _id: projectId});
                 const deletedFeatures = await Feature.deleteMany({_id: { $in: features }});
                 const deletedIssues = await Issue.deleteMany({_id: { $in: issues}});
                 const deletedSuggestions = await Suggestion.deleteMany({_id: { $in: suggestions }});
 
                 const updatedUsers = await User.updateMany({}, { $pull: { 
-                                                                    ownProjects: { $in: ["603e4a180d0d8405f0c8cf57"] },
-                                                                    participantsInProjects: { $in: ["603e4a180d0d8405f0c8cf57"] },
+                                                                    ownProjects: { $in: [projectId] },
+                                                                    participantsInProjects: { $in: [projectId] },
                                                                     features: { $in: features },
                                                                     suggestions: { $in: suggestions },
                                                                     issues: { $in: issues }
@@ -146,45 +164,20 @@ export default {
 
                 res
                 .status(200)
-                .send("Project was deleted");
+                .send({
+                    successMessage: `Project was deleted!`,
+                    project: project
+                });
             } 
             catch (error) {
                 console.log(error);
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with remove Project` 
+                });
             }
            
         }
     }
 }
-
-
-// ownProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }], // TO DO REF TO PROJECT MODEL
-// participantsInProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }], // TO DO REF TO PROJECT MODEL
-// features: [{ type: Schema.Types.ObjectId, ref: 'Feature' }],
-// suggestions: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
-// issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
-
-// ISSUE
-// name:  { type: String, required: true },
-// description: { type: String, required: true },
-// status: { type: String, required: true },
-// date: { type: String, required: true },
-// creator: { type: Schema.Types.ObjectId, ref: 'User' },
-// project: { type: Schema.Types.ObjectId, ref: 'Project' },
-// feature: { type: Schema.Types.ObjectId, ref: 'Feature' },
-
-//  FEATURE
-//  name:  { type: String, required: true },
-//  date: { type: String, required: true },
-//  status: { type: String, required: true }, // IN SUGGESTED // IN DEVELOPMENT // IN TESTING // COMPLETED
-//  creator: { type: Schema.Types.ObjectId, ref: 'User' },
-//  project: { type: Schema.Types.ObjectId, ref: 'Project' },
-//  suggestion: [{ type: Schema.Types.ObjectId, ref: 'Suggestion' }],
-//  issues: [{ type: Schema.Types.ObjectId, ref: 'Issue' }],
-
-//  PROJECT
-//  name:  { type: String, required: true },
-//  description: { type: String, required: true },
-//  date: { type: String, required: true },
-//  creator: { type: Schema.Types.ObjectId, ref: 'User' },
-//  members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-//  features: [{ type: Schema.Types.ObjectId, ref: 'Feature' }],

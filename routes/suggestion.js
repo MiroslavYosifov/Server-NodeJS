@@ -7,8 +7,9 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../middleware/auth/auth
 
 const router = express.Router();
 
-router.get('/get', isAuth, controllers.suggestion.get.getSuggestion);
+router.get('/get/:suggestionId', isAuth, controllers.suggestion.get.getSuggestion);
 router.post('/add', addSuggestion.schemaValidations, addSuggestion.handlingErrors, isAuth, controllers.suggestion.post.addSuggestion);
-router.delete('/delete', isAuth, controllers.suggestion.delete.removeSuggestion);
+router.put('/updatestatus/:suggestionId', isAuth, controllers.suggestion.put.updateSuggestionStatus);
+router.delete('/delete/:suggestionId', isAuth, controllers.suggestion.delete.removeSuggestion);
 
 export default router;

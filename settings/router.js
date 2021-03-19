@@ -6,4 +6,6 @@ export default (app) => {
     app.use('/api/feature', routes.feature);
     app.use('/api/issue', routes.issue);
     app.use('/api/suggestion', routes.suggestion);
+    app.use('/api/note', routes.note);
 };
+

@@ -6,7 +6,7 @@ const Model = mongoose.model;
 const issueSchema = new Schema({
     name:  { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: String, required: true, default: "accepted" },
+    status: { type: String, required: true },
     date: { type: String, required: true },
     creator: { type: Schema.Types.ObjectId, ref: 'User' },
     project: { type: Schema.Types.ObjectId, ref: 'Project' },

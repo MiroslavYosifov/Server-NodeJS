@@ -10,27 +10,35 @@ export default {
                                                 .populate('feature')
                                                 .populate('project');
 
-
                 res
                 .status(200)
                 .send(suggestion);
+                
             } catch (error) {
+
                 console.log(error);
+
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with get Suggestions` 
+                });
             }
         },
     },
     post: {
         addSuggestion: async (req, res, next) => {
-            const { name, description, status, featureId } = req.body;
+            const { name, description, featureId } = req.body;
             const creatorId = req.authUser._id;
             // TO DO VALDIATION OF DATA
+
             try {
                 const user = await User.findById(creatorId);
                 const feature = await Feature.findById(featureId);
 
                 const projectId = feature.project;
 
-                const createdSuggestion = await Suggestion.create({ name, description, status, date: Date.now(), creator: creatorId, feature: featureId, project: projectId  });
+                const createdSuggestion = await Suggestion.create({ name, description, status: "waiting for approval", date: Date.now(), creator: creatorId, feature: featureId, project: projectId  });
                
                 user.suggestions.push(createdSuggestion._id);
                 user.save();
@@ -46,12 +54,20 @@ export default {
 
                 res
                 .status(201)
-                .send(suggestion);
+                .send({ 
+                    successMessage: `${name} suggestion was added successfully!`,
+                    suggestion: suggestion
+                });
 
-    
             } 
             catch (error) {
                 console.log(error);
+
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with add Suggestion` 
+                });
             }
         },
     },
@@ -59,24 +75,62 @@ export default {
         updateSuggestion: async (req, res, next) => {
 
         },
+        updateSuggestionStatus: async (req, res, next) => {
+            const { status } = req.body;
+            const suggestionId = req.params.suggestionId;
+
+            try {
+                const suggestion = await Suggestion.findById(suggestionId);
+            
+                suggestion.status = status;
+                suggestion.save();
+
+                res
+                    .status(200)
+                    .send({ 
+                        successMessage: `Suggestion was ${status} successfully!`,
+                        suggestionId: suggestionId, 
+                        status: status 
+                    });
+                } 
+            catch (error) {
+                console.log(error);
+
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with update Suggestion` 
+                });
+            }
+
+            
+        },
     },
     delete: {
         removeSuggestion: async (req, res, next) => {
-            //const { issueId } = req.body;
+            const suggestionId = req.params.suggestionId;
             try {
-                const suggestion = await Suggestion.findById("603e4f9ef5aa7c0dc0e2a7be");
+                const suggestion = await Suggestion.findById(suggestionId);
+                console.log(suggestion);
+                const updatedFeature = await Feature.updateOne({ _id: suggestion.feature }, { $pull: { suggestions: { $in: [suggestionId] } }});
+                const updatedUser = await User.updateOne({ _id: suggestion.creator }, { $pull: { suggestions: { $in: [suggestionId] } }});
             
-                const updatedFeature = await Feature.updateOne({ _id: suggestion.feature }, { $pull: { suggestions: { $in: ["603e4f9ef5aa7c0dc0e2a7be"] } }});
-                const updatedUser = await User.updateOne({ _id: suggestion.creator }, { $pull: { suggestions: { $in: ["603e4f9ef5aa7c0dc0e2a7be"] } }});
-            
-                const deletedIssue = await Suggestion.deleteOne({_id: "603e4f9ef5aa7c0dc0e2a7be"});
+                const deletedIssue = await Suggestion.deleteOne({_id: suggestionId});
                 
                 res
                 .status(200)
-                .send("Suggestion was deleted!")
+                .send({ 
+                    successMessage: "Suggestion was deleted!", 
+                    suggestionId: suggestionId 
+                });
             } 
             catch (error) {
                 console.log(error);
+                res
+                .status(400)
+                .send({ 
+                    errorMessage: `Something go wrong with delete suggestion` 
+                });
             }
         },
     }

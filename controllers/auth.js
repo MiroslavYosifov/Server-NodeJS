@@ -6,7 +6,58 @@ import { createAuthToken, verifyAuthToken, getTokenExpirationTime } from '../hel
 
 export default {
     get: {
+        userInfo: async (req, res, next) => {
+            const userId = req.params.userId;
 
+            try {
+                const userInfo = await User
+                                        .findById(userId)
+                                        .populate('ownProjects')
+                                        .populate('features')
+                                        .populate({ 
+                                            path: 'suggestions', 
+                                            populate: [
+                                                { 
+                                                    path: 'project',
+                                                    model: 'Project',
+                                                },
+                                                {
+                                                    path: 'feature',
+                                                    model: 'Feature',
+                                                },
+                                                {
+                                                    path: 'creator',
+                                                    model: 'User',
+                                                },
+                                            ]
+                                        })
+                                        .populate({ 
+                                            path: 'issues', 
+                                            populate: [
+                                                { 
+                                                    path: 'project',
+                                                    model: 'Project',
+                                                },
+                                                {
+                                                    path: 'feature',
+                                                    model: 'Feature',
+                                                },
+                                                {
+                                                    path: 'creator',
+                                                    model: 'User',
+                                                },
+                                            ]
+                                        })
+                res
+                .status(200)
+                .send(userInfo);
+
+            } 
+            catch (error) {
+                throw new Error(error);
+            }
+                 
+        },
     },
     post: {
         registration: async (req, res, next) => {
@@ -23,7 +74,7 @@ export default {
 
                 res
                 .status(200)
-                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name });
+                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name, roles: user.roles });
 
             } 
             catch (error) {
@@ -47,7 +98,7 @@ export default {
 
                 res
                 .status(200)
-                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name });
+                .send({ authToken: authToken, expiresIn: expiresIn, userId: user._id, name: user.name, roles: user.roles });
     
                 //res.cookie(configs.auth.authToken, token).status(200).header(configs.auth.authToken, token).send({ "token": token });
                 //let token = req.headers.authorization;

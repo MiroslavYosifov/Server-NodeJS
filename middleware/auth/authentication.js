@@ -3,8 +3,7 @@ import { verifyAuthToken } from '../../helpers/jwt.js';
 import configs from '../../settings/configs.js';
 
 export const isAuth = async function (req, res, next) {
-    const authToken = req.body.authToken;
-
+    const authToken = req.headers.authorization;
     try {
         if(!authToken) {
             res.status(401).send('Not authenticated!');
@@ -26,9 +25,11 @@ export const isAuth = async function (req, res, next) {
 
         const user = await User.findById(verifiedUser.id);
         req.authUser = user;
+        console.log(req.authUser);
         next();
 
     } catch (error) {
         console.log(error);
+        res.status(401).send('Not authenticated!');
     }
 }

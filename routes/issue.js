@@ -7,8 +7,9 @@ import { isAdmin, isDeveloper, isModerator, isQA } from '../middleware/auth/auth
 
 const router = express.Router();
 
-router.get('/get', isAuth, controllers.issue.get.getIssue);
+router.get('/get/:issueId', controllers.issue.get.getIssue);
 router.post('/add', isAuth, addIssue.schemaValidations, addIssue.handlingErrors, controllers.issue.post.addIssue);
-router.delete('/delete', isAuth, controllers.issue.delete.removeIssue);
+router.put('/updatestatus/:issueId', isAuth, controllers.issue.put.updateIssueStatus);
+router.delete('/delete/:issueId', isAuth, controllers.issue.delete.removeIssue);
 
 export default router;

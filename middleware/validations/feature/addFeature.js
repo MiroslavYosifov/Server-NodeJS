@@ -7,9 +7,7 @@ const schemaValidations = (function () {
         .isLength({ min: 4 }).withMessage("Feature name should be greater than 3 character"),
         body("description")
         .exists().withMessage("Feature description is required")
-        .isLength({ min: 4 }).withMessage("Feature description should be greater than 3 character"),
-        body("status")
-        .exists().withMessage("Status is required")
+        .isLength({ min: 4 }).withMessage("Feature description should be greater than 3 character")
     ];
 })();
 

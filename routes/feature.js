@@ -9,7 +9,8 @@ const router = express.Router();
 
 // FEATURE PATHSgetFeature
 router.get('/get/:featureId', controllers.feature.get.getFeature); // TO DO PROJECT ID IN URL /:id/feature/add
-router.post('/add', addFeature.schemaValidations, addFeature.handlingErrors, isAuth, controllers.feature.post.addFeature); // TO DO PROJECT ID IN URL /:id/feature/add\
-router.delete('/delete', isAuth, controllers.feature.delete.removeFeature); // TO DO PROJECT ID IN URL /:id/feature/add
+router.post('/add', addFeature.schemaValidations, addFeature.handlingErrors, isAuth, controllers.feature.post.addFeature);
+router.put('/updatestatus/:featureId', isAuth, controllers.feature.put.updateFeatureStatus);
+router.delete('/delete/:featureId', isAuth, controllers.feature.delete.removeFeature); // TO DO PROJECT ID IN URL /:id/feature/add
 
 export default router;
