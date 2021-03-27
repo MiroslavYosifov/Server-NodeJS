@@ -33,9 +33,14 @@ export default {
            
         },
         listProjects: async (req, res, next) => {
+            const countClicks = req.query.countClicks;
+            console.log(countClicks);
+
             try {
                 const projects = await Project
                                         .find()
+                                        .sort({date: -1})
+                                        .limit((Number(countClicks) * 5))
                                         .populate({ 
                                             path: 'features', 
                                             populate: { 

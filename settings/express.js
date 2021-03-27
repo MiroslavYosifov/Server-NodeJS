@@ -5,6 +5,7 @@ import cors from 'cors';
 export default (app) => {
     app.use(cors({
         origin: 'http://localhost:8080',
+        // origin: 'https://projects-oss-system.netlify.app',
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
         optionsSuccessStatus: 200
